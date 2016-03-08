@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * Created by steurjor on 2-3-2016.
@@ -12,19 +13,24 @@ import android.graphics.Paint;
 public class Character {
     private MainThread thread;
     private Bitmap image;
-    private int x = 400, y = 400; // Start position character
+    public static final int WIDTH = 106;
+    public static final int HEIGHT = 102;
+    //final float scaleFactorX = 0, scaleFactorY = 0;
+    public static int x = 400, y = 400; // Start position character
     boolean walking = false;
     boolean doXPath = false;
     int walkingSpeed = 9;
     int newX, newY;
     int diffX, diffY;
     int speedX, speedY;
-    int centerCharacter = 61;
+    public static int centerCharacterX = 53;
+    public static int centerCharacterY = 51;
     int angle;
-
+    public static Rect bounds;
 
     public Character (Bitmap res) {
         image = res;
+        bounds = new Rect(x-centerCharacterX, y-centerCharacterY, x+WIDTH, y+HEIGHT);
     }
 
     public void update(int positionX, int positionY){
@@ -81,10 +87,11 @@ public class Character {
                 }
             }
         }
-        //System.out.println("speedX: " + speedX);
+
+        bounds.set(x-centerCharacterX, y-centerCharacterY, x-centerCharacterX+WIDTH, y-centerCharacterY+HEIGHT);
     }
 
-    public void draw(Canvas canvas, int positionX, int positionY) {
+    public void draw(Canvas canvas, int positionX, int positionY, float scaleFactorX, float scaleFactorY) {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
@@ -92,14 +99,17 @@ public class Character {
         paint.setAntiAlias(true);
 
         Matrix matrix = new Matrix();
-        matrix.postRotate(getAngle(), centerCharacter,centerCharacter);
-        matrix.postTranslate((x-centerCharacter), (y-centerCharacter));
+        matrix.postRotate(getAngle(), centerCharacterX,centerCharacterY);
+        matrix.postTranslate((x-centerCharacterX), (y-centerCharacterY));
         // Draw X line
         //canvas.drawLine(x, y, x, positionY, paint);
         // Draw y line
         //canvas.drawLine(x, positionY, positionX, positionY, paint);
-        canvas.drawText(getAngle()+ " deg", 10 , 230, paint);
+        final int savedState = canvas.save();
+        canvas.scale(scaleFactorX,scaleFactorY);
+        //canvas.drawText(getAngle()+ " deg", 10 , 230, paint);
         canvas.drawBitmap(image, matrix, null);
+        canvas.restoreToCount(savedState);
     }
 
 
@@ -123,5 +133,6 @@ public class Character {
     public int getAngle(){
         return angle;
     }
+
 
 }

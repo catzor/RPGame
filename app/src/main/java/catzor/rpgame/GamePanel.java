@@ -15,6 +15,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
     private Background bg;
     private Character ch;
+    private Kitkat kk;
+
+    public static final int WIDTH = 720;
+    public static final int HEIGHT = 1280;
 
     private int positionX;
     private int positionY;
@@ -53,18 +57,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.background_green));
         ch = new Character(BitmapFactory.decodeResource(getResources(), R.drawable.character));
+        kk = new Kitkat(BitmapFactory.decodeResource(getResources(), R.drawable.kitkat));
         thread.setRunning(true);
         // We can safely start the game loop
         if (thread.getState() == Thread.State.NEW) {
             //thread.setRunning(true);
             thread.start();
+
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        positionX = (int)event.getX();
-        positionY = (int)event.getY();
+        float x = event.getX() / getScaleFactorX();
+        float y = event.getY() / getScaleFactorY();
+        positionX = (int) x;
+        positionY = (int) y;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
@@ -76,13 +84,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         bg.update();
         ch.update(positionX, positionY);
+        kk.update();
+
     }
 
     @Override
     public void draw(Canvas canvas){
         String stringFPS = getFPS();
-        bg.draw(canvas, stringFPS, positionX, positionY);
-        ch.draw(canvas, positionX, positionY);
+        if (canvas !=null) {
+            bg.draw(canvas, stringFPS, positionX, positionY, getScaleFactorX(), getScaleFactorY());
+            ch.draw(canvas, positionX, positionY, getScaleFactorX(), getScaleFactorY());
+            kk.draw(canvas, getScaleFactorX(), getScaleFactorY());
+        }
     }
 
 
@@ -98,6 +111,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public static int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
+    }
+
+    public float getScaleFactorX() {
+        float scaleFactorX = (float)getWidth() / WIDTH;
+        return scaleFactorX;
+    }
+
+    public float getScaleFactorY() {
+        float scaleFactorY = (float)getHeight() / HEIGHT;
+        return scaleFactorY;
     }
 
 }
