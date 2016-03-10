@@ -61,6 +61,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread.setRunning(true);
         if (thread.getState() ==Thread.State.TERMINATED) {
             thread = new MainThread(getHolder(),this);
+            boolean retry = true;
+            while (retry) {
+                try {
+                    thread.setRunning(true);
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                retry = false;
+            }
         }   
         // We can safely start the game loop
         if (thread.getState() == Thread.State.NEW) {
