@@ -16,6 +16,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Background bg;
     private Character ch;
     private Kitkat kk;
+    private FBI fbi;
 
     public static final int WIDTH = 720;
     public static final int HEIGHT = 1280;
@@ -58,6 +59,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.background_green));
         ch = new Character(BitmapFactory.decodeResource(getResources(), R.drawable.character));
         kk = new Kitkat(BitmapFactory.decodeResource(getResources(), R.drawable.kitkat));
+        fbi = new FBI(BitmapFactory.decodeResource(getResources(), R.drawable.fbi_png));
         thread.setRunning(true);
         if (thread.getState() ==Thread.State.TERMINATED) {
             thread = new MainThread(getHolder(),this);
@@ -98,6 +100,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         bg.update();
         ch.update(positionX, positionY);
         kk.update();
+        fbi.update();
 
     }
 
@@ -108,6 +111,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             bg.draw(canvas, stringFPS, positionX, positionY, getScaleFactorX(), getScaleFactorY());
             ch.draw(canvas, positionX, positionY, getScaleFactorX(), getScaleFactorY());
             kk.draw(canvas, getScaleFactorX(), getScaleFactorY());
+            fbi.draw(canvas);
         }
     }
 
