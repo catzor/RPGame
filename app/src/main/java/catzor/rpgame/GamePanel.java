@@ -59,6 +59,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         ch = new Character(BitmapFactory.decodeResource(getResources(), R.drawable.character));
         kk = new Kitkat(BitmapFactory.decodeResource(getResources(), R.drawable.kitkat));
         thread.setRunning(true);
+        if (thread.getState() ==Thread.State.TERMINATED) {
+            thread = new MainThread(getHolder(),this);
+        }   
         // We can safely start the game loop
         if (thread.getState() == Thread.State.NEW) {
             //thread.setRunning(true);
